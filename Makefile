@@ -21,10 +21,7 @@ baseline:
 	docker-compose build baseline
 
 up: protoc
-	docker-compose up --build
-
-bench:
-	GRPC_SERVER=localhost:9090 GRPCGATEWAY_ECHO_URL=http://localhost:9080/v1/echo BASELINE_ECHO_URL=http://localhost:8080/v1/echo go test -bench=.
+	docker-compose up --build --remove-orphans
 
 sizes:
 	echo "baseline:"

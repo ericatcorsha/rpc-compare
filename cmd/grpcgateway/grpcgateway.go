@@ -13,6 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 )
 
@@ -33,6 +34,8 @@ func runGRPC(wg sync.WaitGroup, lis net.Listener) {
 	defer wg.Done()
 	s := grpc.NewServer()
 	pb.RegisterEchoServer(s, &server{})
+	// Register reflection service on gRPC server.
+	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
 		logrus.Fatal("GRPC could not serve")
 	}

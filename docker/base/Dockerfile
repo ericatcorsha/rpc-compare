@@ -19,3 +19,11 @@ RUN go get -u github.com/a-urth/go-bindata/...
 # Tools for the grpc-gateway swagger client
 RUN apt install -y nodejs npm
 RUN npm install swagger-typescript-client-generator
+
+# Install ghz for benchmarking the grpc service
+WORKDIR /tmp
+RUN curl -L "https://github.com/bojand/ghz/releases/download/v0.49.0/ghz_0.49.0_Linux_x86_64.tar.gz" | tar xzv
+RUN mv ./ghz /go/bin/
+RUN mv ./ghz-web /go/bin/
+
+WORKDIR /src

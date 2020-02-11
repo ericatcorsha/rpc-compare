@@ -36,14 +36,25 @@ services:
     depends_on:
       - base
 
-  # bench:
-  #   build:
-  #     context: .
-  #     dockerfile: "docker/bench/Dockerfile"
-  #   image:
-  #     rpc-compare/bench
-  #   depends_on:
-  #     - base
-  #   links:
-  #     - grpcgateway
-  #     - baseline
+  bench:
+    build:
+      context: .
+      dockerfile: "docker/bench/Dockerfile"
+    image:
+      rpc-compare/bench
+    volumes:
+     - "./out:/out"
+    depends_on:
+      - base
+    links:
+      - grpcgateway
+      - baseline
+
+  jupyter:
+    image:
+      jupyter/scipy-notebook
+    ports:
+      - "8888:8888"
+    volumes:
+     - "./notebooks:/home/jovyan"
+     - "./out:/home/jovyan/data"
