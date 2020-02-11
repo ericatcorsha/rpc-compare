@@ -1,0 +1,49 @@
+version: '3'
+services:
+  # This is the base image with all the build tools needed for this project
+  base:
+    build:
+      context: .
+      dockerfile: "docker/base/Dockerfile"
+    image:
+      rpc-compare/base
+
+  grpcgateway:
+    build:
+      context: .
+      dockerfile: "docker/grpcgateway/Dockerfile"
+    image:
+      rpc-compare/grpcgateway
+    environment:
+      - LISTEN=:9090
+      - LISTEN_GATEWAY=:9080
+    ports:
+      - "9090:9090"
+      - "9080:9080"
+    depends_on:
+      - base
+
+  baseline:
+    build:
+      context: .
+      dockerfile: "docker/baseline/Dockerfile"
+    environment:
+      - LISTEN=:8080
+    ports:
+      - "8080:8080"
+    image:
+      rpc-compare/baseline
+    depends_on:
+      - base
+
+  # bench:
+  #   build:
+  #     context: .
+  #     dockerfile: "docker/bench/Dockerfile"
+  #   image:
+  #     rpc-compare/bench
+  #   depends_on:
+  #     - base
+  #   links:
+  #     - grpcgateway
+  #     - baseline

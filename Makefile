@@ -1,11 +1,8 @@
-RUN=docker run -it -v `pwd`:/src todo-grpc/base
+RUN=docker run -it -v `pwd`:/src rpc-compare/base
 
-all: clean protoc grpcgateway graphql baseline
+all: clean protoc grpcgateway baseline
 
-clean:
-	rm -f grpcgateway graphql baseline
-
-protoc:
+protoc: docker-base
 	mkdir -p echo
 	${RUN} protoc echo.proto \
 	  -I . \
@@ -14,14 +11,23 @@ protoc:
 	  --grpc-gateway_out=logtostderr=true:echo/. \
 	  --swagger_out=logtostderr=true:.
 
-grpcgateway:
-	go build -o grpcgateway grpcgateway.go
+docker-base:
+	docker-compose build base
 
-graphql:
-	go build -o graphql graphql.go
+grpcgateway:
+	docker-compose build grpcgateway
 
 baseline:
-	go build -o baseline baseline.go
+	docker-compose build baseline
+
+up: protoc
+	docker-compose up --build
 
 bench:
-	false
+	GRPC_SERVER=localhost:9090 GRPCGATEWAY_ECHO_URL=http://localhost:9080/v1/echo BASELINE_ECHO_URL=http://localhost:8080/v1/echo go test -bench=.
+
+sizes:
+	echo "baseline:"
+	docker run rpc-compare/baseline ls -lh /src/server
+	echo "grpcgateway:"
+	docker run rpc-compare/grpcgateway ls -lh /src/server

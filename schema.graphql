@@ -1,0 +1,14 @@
+type Query {
+  version: String!
+}
+
+type Mutation {
+  echo(input: EchoRequest!): EchoReply!
+}
+
+input EchoRequest {
+  message: String!
+}
+type EchoReply {
+  message: String!
+}
