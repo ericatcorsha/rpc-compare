@@ -7,8 +7,43 @@ paths:
     post:
       summary: "An echoing endpoint"
       operationId: "Echo"
+      parameters:
+        - in: body
+          name: echoRequest
+          required: true
+          schema:
+            $ref: "#/definitions/EchoRequest"
       responses:
         200:
           description: "An echo"
           schema:
-            type: string
+            $ref: "#/definitions/EchoReply"
+        default:
+          description: "An error"
+          schema:
+            $ref: "#/definitions/ErrorReply"
+definitions:
+  EchoRequest:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  EchoReply:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorReply:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      message:
+        type: string
+      code:
+        type: string

@@ -8,20 +8,6 @@ services:
     image:
       rpc-compare/base
 
-  grpcgateway:
-    build:
-      context: .
-      dockerfile: "docker/grpcgateway/Dockerfile"
-    image:
-      rpc-compare/grpcgateway
-    environment:
-      - LISTEN=:9090
-      - LISTEN_GATEWAY=:9080
-    ports:
-      - "9090:9090"
-      - "9080:9080"
-    depends_on:
-      - base
 
   graphql:
     build:
@@ -46,6 +32,34 @@ services:
       - "8080:8080"
     image:
       rpc-compare/baseline
+    depends_on:
+      - base
+
+  grpcgateway:
+    build:
+      context: .
+      dockerfile: "docker/grpcgateway/Dockerfile"
+    image:
+      rpc-compare/grpcgateway
+    environment:
+      - LISTEN=:9090
+      - LISTEN_GATEWAY=:9080
+    ports:
+      - "9090:9090"
+      - "9080:9080"
+    depends_on:
+      - base
+
+  go-swagger:
+    build:
+      context: .
+      dockerfile: "docker/go-swagger/Dockerfile"
+    environment:
+      - LISTEN=0.0.0.0:10080
+    ports:
+      - "10080:10080"
+    image:
+      rpc-compare/go-swagger
     depends_on:
       - base
 

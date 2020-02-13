@@ -1,4 +1,4 @@
 RUN=docker run -it -v `pwd`:/src rpc-compare/base
 
 swagger:
-	${RUN} bash
+	${RUN} swagger generate server

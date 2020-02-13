@@ -1,11 +1,9 @@
 RUN=docker run -it -v `pwd`:/src rpc-compare/base
 
-all: clean protoc grpcgateway baseline
+all: clean protoc swagger-gen grpcgateway baseline
 
 protoc: docker-base
-	# grpcgateway
 	$(MAKE) -C servers/grpcgateway protoc
-	$(MAKE) -C servers/twirp protoc
 
 
 docker-base:
@@ -20,15 +18,20 @@ baseline:
 graphql:
 	docker-compose build graphql
 
-go-swagger: docker-base
+swagger-gen: docker-base
 	$(MAKE) -C servers/go-swagger
-	docker-compose build go-swagger
 
-up: protoc
+build:
+	docker-compose build
+
+up: protoc build benchmark-binary-size
 	docker-compose up --build --remove-orphans
 
-sizes:
-	echo "baseline:"
-	docker run rpc-compare/baseline ls -lh /src/server
-	echo "grpcgateway:"
-	docker run rpc-compare/grpcgateway ls -lh /src/server
+benchmark-binary-size:
+	# record the sizes of the docker images
+	echo >&2 "Recording the size of the compiled binaries"
+	echo "binary,size (bytes)" > out/bin-sizes.csv
+	docker run rpc-compare/baseline stat -c "%n,%s" baseline >> out/bin-sizes.csv
+	docker run rpc-compare/go-swagger stat -c "%n,%s" go-swagger >> out/bin-sizes.csv
+	docker run rpc-compare/graphql stat -c "%n,%s" graphql >> out/bin-sizes.csv
+	docker run rpc-compare/grpcgateway stat -c "%n,%s" grpcgateway >> out/bin-sizes.csv

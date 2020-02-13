@@ -4,9 +4,9 @@
 
  - Native GRPC
  - GRPC-Gateway
- - GraphQL
+ - GQLGen (GraphQL)
+ - Go-Swagger
  - HTTP + JSON + http.Handler
- - Twirp
 
 ## Service
 
