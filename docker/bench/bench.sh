@@ -21,3 +21,8 @@ hey -c 50 -n 10000 -d '{"message": "Hello, World!"}' -m POST -o csv http://grpcg
 echo >&2 "Cooling down for 5 seconds"
 sleep 5
 
+# Benchmark the GRPC-Gateway service
+echo >&2 "Benchmarking GraphQL Service"
+hey -c 50 -n 10000 -d '{"operationName":"Echo","variables":{},"query":"mutation Echo { echo(input: {message: \"testing\"}) { message }}"}' -m POST -o csv http://graphql:7080/query > /out/graphql.csv
+echo >&2 "Cooling down for 5 seconds"
+sleep 5

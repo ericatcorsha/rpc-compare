@@ -3,13 +3,10 @@ RUN=docker run -it -v `pwd`:/src rpc-compare/base
 all: clean protoc grpcgateway baseline
 
 protoc: docker-base
-	mkdir -p echo
-	${RUN} protoc echo.proto \
-	  -I . \
-	  -I/go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-	  --go_out=plugins=grpc:echo \
-	  --grpc-gateway_out=logtostderr=true:echo/. \
-	  --swagger_out=logtostderr=true:.
+	# grpcgateway
+	$(MAKE) -C servers/grpcgateway protoc
+	$(MAKE) -C servers/twirp protoc
+
 
 docker-base:
 	docker-compose build base
@@ -19,6 +16,13 @@ grpcgateway:
 
 baseline:
 	docker-compose build baseline
+
+graphql:
+	docker-compose build graphql
+
+go-swagger: docker-base
+	$(MAKE) -C servers/go-swagger
+	docker-compose build go-swagger
 
 up: protoc
 	docker-compose up --build --remove-orphans

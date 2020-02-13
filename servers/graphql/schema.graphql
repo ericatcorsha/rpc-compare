@@ -1,0 +1,31 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type Todo {
+  id: ID!
+  text: String!
+  done: Boolean!
+  user: User!
+}
+
+type User {
+  id: ID!
+  name: String!
+}
+
+# We have to have a Query type
+type Query {
+  version: String!
+}
+
+input EchoRequest {
+  message: String!
+}
+
+type EchoReply {
+  message: String!
+}
+type Mutation {
+  echo(input: EchoRequest!): EchoReply!
+}

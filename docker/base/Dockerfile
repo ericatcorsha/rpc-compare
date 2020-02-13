@@ -9,8 +9,8 @@ RUN go get -u google.golang.org/grpc
 RUN go get -u github.com/golang/protobuf/protoc-gen-go
 
 
-RUN curl -L https://github.com/grpc/grpc-web/releases/download/1.0.7/protoc-gen-grpc-web-1.0.7-linux-x86_64 > /usr/bin/protoc-gen-grpc-web
-RUN chmod +x /usr/bin/protoc-gen-grpc-web
+RUN curl -L https://github.com/grpc/grpc-web/releases/download/1.0.7/protoc-gen-grpc-web-1.0.7-linux-x86_64 > /usr/local/bin/protoc-gen-grpc-web
+RUN chmod +x /usr/local/bin/protoc-gen-grpc-web
 
 RUN go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 RUN go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
@@ -25,5 +25,9 @@ WORKDIR /tmp
 RUN curl -L "https://github.com/bojand/ghz/releases/download/v0.49.0/ghz_0.49.0_Linux_x86_64.tar.gz" | tar xzv
 RUN mv ./ghz /go/bin/
 RUN mv ./ghz-web /go/bin/
+
+# Install the go-swagger binary
+RUN curl -L https://github.com/go-swagger/go-swagger/releases/download/v0.22.0/swagger_linux_amd64 > /usr/local/bin/swagger
+RUN chmod +x /usr/local/bin/swagger
 
 WORKDIR /src

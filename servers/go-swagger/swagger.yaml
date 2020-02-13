@@ -1,0 +1,14 @@
+swagger: "2.0"
+info:
+  title: "echo"
+  version: "v1"
+paths:
+  /v1/echo:
+    post:
+      summary: "An echoing endpoint"
+      operationId: "Echo"
+      responses:
+        200:
+          description: "An echo"
+          schema:
+            type: string

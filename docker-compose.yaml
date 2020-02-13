@@ -23,6 +23,19 @@ services:
     depends_on:
       - base
 
+  graphql:
+    build:
+      context: .
+      dockerfile: "docker/graphql/Dockerfile"
+    environment:
+      - LISTEN=0.0.0.0:7080
+    ports:
+      - "7080:7080"
+    image:
+      rpc-compare/graphql
+    depends_on:
+      - base
+
   baseline:
     build:
       context: .
